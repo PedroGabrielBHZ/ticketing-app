@@ -1,23 +1,24 @@
 import mongoose from "mongoose";
 import { Password } from "../services/password";
 
-// Describe properties that are required to create a new User
+// describe properties that are required to create a new User
 interface UserAttrs {
   email: string;
   password: string;
 }
 
-// Describe properties that a User Model has
+// describe properties that a User Model has
 interface UserModel extends mongoose.Model<UserDoc> {
   build(attrs: UserAttrs): UserDoc;
 }
 
-// Describe the properties that a User Document has
+// describe the properties that a User Document has
 interface UserDoc extends mongoose.Document {
   email: string;
   password: string;
 }
 
+// define user schema
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -41,6 +42,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+// hash user password
 userSchema.pre("save", async function (done) {
   if (this.isModified("password")) {
     const hashed = await Password.toHash(this.get("password"));
@@ -49,10 +51,12 @@ userSchema.pre("save", async function (done) {
   done();
 });
 
+// build user
 userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
 };
 
+// define User model from schema
 const User = mongoose.model<UserDoc, UserModel>("User", userSchema);
 
 export { User };

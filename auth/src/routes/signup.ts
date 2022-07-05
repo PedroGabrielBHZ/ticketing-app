@@ -7,6 +7,9 @@ import { User } from "../models/user";
 
 const router = express.Router();
 
+/**
+ * Sign a new user up.
+ */
 router.post(
   "/api/users/signup",
   [
@@ -18,12 +21,21 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
+    // fetch user credentials
     const { email, password } = req.body;
+
+    // fetch user with same mail in DB
     const existingUser = await User.findOne({ email });
+
+    // user already exists: throw error
     if (existingUser) {
       throw new BadRequestError("Email in use.");
     }
+
+    // register a new user from credentials
     const user = User.build({ email, password });
+
+    // persist user object
     await user.save();
 
     // generate JWT
@@ -37,6 +49,7 @@ router.post(
       jwt: userJwt,
     };
 
+    // respond created
     res.status(201).send(user);
   }
 );

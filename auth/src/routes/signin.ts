@@ -8,6 +8,9 @@ import { validateRequest, BadRequestError } from "@pepe_tickets/common";
 
 const router = express.Router();
 
+/**
+ * Sign in as an existing user.
+ */
 router.post(
   "/api/users/signin",
   [
@@ -21,13 +24,19 @@ router.post(
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const existingUser = await User.findOne({ email });
+
+    // user does not exist: throw generic error
     if (!existingUser) {
       throw new BadRequestError("Invalid credentials.");
     }
+
+    // verify user password
     const passwordsMatch = await Password.compare(
       existingUser.password,
       password
     );
+
+    // password does not match: throw generic error
     if (!passwordsMatch) {
       throw new BadRequestError("Invalid credentials.");
     }
@@ -38,11 +47,12 @@ router.post(
       process.env.JWT_KEY!
     );
 
-    // store it on session object
+    // store JWT on session object
     req.session = {
       jwt: userJwt,
     };
 
+    // respond success
     res.status(200).send(existingUser);
   }
 );
