@@ -4,7 +4,6 @@ import {
   NotFoundError,
   requireAuth,
   OrderStatus,
-  validateRequest,
   BadRequestError,
 } from "@pepe_tickets/common";
 import { body } from "express-validator";

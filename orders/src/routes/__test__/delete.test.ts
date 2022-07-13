@@ -1,4 +1,5 @@
 import request from "supertest";
+import mongoose from "mongoose";
 import { app } from "../../app";
 import { Ticket } from "../../models/ticket";
 import { Order, OrderStatus } from "../../models/order";
@@ -8,6 +9,7 @@ describe("A request for deleting an order", () => {
   it("marks an order as cancelled", async () => {
     // create a ticket with Ticket model
     const ticket = Ticket.build({
+      id: new mongoose.Types.ObjectId().toHexString(),
       title: "concert",
       price: 20,
     });
@@ -40,6 +42,7 @@ describe("A request for deleting an order", () => {
   it("emits a order cancelled event", async () => {
     // create a ticket with Ticket model
     const ticket = Ticket.build({
+      id: new mongoose.Types.ObjectId().toHexString(),
       title: "concert",
       price: 20,
     });

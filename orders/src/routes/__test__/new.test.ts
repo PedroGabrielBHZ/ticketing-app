@@ -21,6 +21,7 @@ describe("A request for a new order", () => {
   it("returns an error if the ticket is reserved", async () => {
     // build and persist sample ticket
     const ticket = Ticket.build({
+      id: new mongoose.Types.ObjectId().toHexString(),
       title: "concert",
       price: 20,
     });
@@ -46,6 +47,7 @@ describe("A request for a new order", () => {
   it("reserves a ticket", async () => {
     // build and persist sample ticket
     const ticket = Ticket.build({
+      id: new mongoose.Types.ObjectId().toHexString(),
       title: "concert",
       price: 20,
     });
@@ -62,6 +64,7 @@ describe("A request for a new order", () => {
   it("emits an order created event", async () => {
     // build and persist sample ticket
     const ticket = Ticket.build({
+      id: new mongoose.Types.ObjectId().toHexString(),
       title: "concert",
       price: 20,
     });

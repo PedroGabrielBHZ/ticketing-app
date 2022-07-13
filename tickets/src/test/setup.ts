@@ -1,8 +1,8 @@
 import request from "supertest";
-import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
-import { app } from "../app";
 import jwt from "jsonwebtoken";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import { app } from "../app";
 
 jest.mock("../nats-wrapper");
 
@@ -15,11 +15,11 @@ beforeAll(async () => {
   process.env.JWT_KEY = "secret";
   mongo = await MongoMemoryServer.create();
   const mongoUri = mongo.getUri();
-
   await mongoose.connect(mongoUri);
 });
 
 beforeEach(async () => {
+  jest.clearAllMocks();
   const collections = await mongoose.connection.db.collections();
   for (let collection of collections) {
     await collection.deleteMany({});

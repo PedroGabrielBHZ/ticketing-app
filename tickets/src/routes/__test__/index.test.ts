@@ -8,12 +8,21 @@ const createTicket = () => {
   });
 };
 
-it("can fetch a list of tickets", async () => {
-  await createTicket();
-  await createTicket();
-  await createTicket();
+describe("A request for fetching all tickets", () => {
+  it("can fetch a list of tickets", async () => {
 
-  const response = await request(app).get("/api/tickets").send().expect(200);
+    // generate a big enough number
+    const numberOfTickets = Math.floor(Math.random() * 10e3);
 
-  expect(response.body.length).toEqual(3);
+    // create arbitrary amount of tickets
+    for (let step = 0; step < numberOfTickets; step++){
+      await createTicket();
+    }
+
+    // fetch all tickets expecting success
+    const response = await request(app).get("/api/tickets").send().expect(200);
+
+    // all tickets generated listed?
+    expect(response.body.length).toEqual(numberOfTickets);
+  });
 });
